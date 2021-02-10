@@ -1,0 +1,1 @@
+find . -depth  -name "*.*~" -print  -delete  -o -name "#*.*#" -print -delete

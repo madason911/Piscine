@@ -1,0 +1,107 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    parser_staff.a                                     :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: ljennife <marvin@42.fr>                    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2020/09/01 20:03:24 by ljennife          #+#    #+#              #
+#    Updated: 2020/09/01 22:27:32 by ljennife         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+#include "parser_staff.h"
+
+int	is_printable(char str)
+{
+	if ((str >= 32) && (str <= 127))
+	{
+		return (1);
+	}
+	return(0);
+}
+
+int	is_numeric(char str)
+{
+	if ((str >= 48) && (str <= 57))
+	{
+		return(1);
+	}
+	return (0);
+}
+
+int is_box(char str, t_dict dict)
+{
+	if (str == dict.empty_char || str == dict.obstacle_char || 
+		str == dict.full_char)
+		return (1);
+	return (1);
+}
+
+t_box	ctob(char a, t_dict dict)
+{
+	if (a == dict.empty_char)
+	{
+		return (is_empty);
+	}
+	else if (a == dict.obstacle_char)
+	{
+		return (is_obstacle);
+	}
+	else if (a == dict.full_char)
+	{
+		return (is_full);
+	}
+	else
+	{
+		return (is_error);
+	}
+}
+
+int		join_box(char tmp, t_dict dict, t_box **line, int size)
+{
+	t_box *tmp_line;
+	int i;
+
+	if (count == 0 || *line == NULL)
+	{
+		if (*line != NULL)
+			free(line);
+		*line = malloc(sizeof(t_box) * 1);
+		*line[0] = ctob(tmp, dict);
+		return (1);
+	}
+	tmp_line = malloc(sizeof(t_box) * (size + 1));
+	if (*line == NULL)
+		return (-1);
+	i = 0;
+	while (i < size)
+	{
+		tmp_line[i] = *line[i];
+		i++; 
+	}
+	tmp_line[size] = ctob(tmp, dict);
+	free(*line);
+	*line = &tmp_line;
+	return (1);
+}
+
+int		str_to_box(char *str, t_dict dict, t_box **line, int size)
+{
+	int i;
+
+	if (*line != NULL)
+		free(*line);
+	*line = malloc(sizeof(t_box) * size);
+	if (*line == NULL)
+		return (-1);
+	i = 0;
+	while (i < size)
+	{
+		*line[i] = ctob(str[i], dict);
+		if (*line[i] == is_error)
+			return (-1);
+		i++;
+	}
+	return (1);
+}
